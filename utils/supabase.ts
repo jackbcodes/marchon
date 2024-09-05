@@ -3,18 +3,26 @@ import { createClient, PostgrestError, QueryData } from "@supabase/supabase-js";
 
 import { Database } from "@/types/database.types";
 
+if (!process.env.EXPO_PUBLIC_SUPABASE_URL) {
+  throw new Error("Missing EXPO_PUBLIC_SUPABASE_URL");
+}
 
-if (!process.env.EXPO_PUBLIC_SUPABASE_URL) throw new Error("Missing EXPO_PUBLIC_SUPABASE_URL");
-if (!process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY) throw new Error("Missing EXPO_PUBLIC_SUPABASE_URL");
+if (!process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY) {
+  throw new Error("Missing EXPO_PUBLIC_SUPABASE_URL");
+}
 
-export const supabase = createClient<Database>(process.env.EXPO_PUBLIC_SUPABASE_URL, process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY, {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
+export const supabase = createClient<Database>(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
   },
-});
+);
 
 // This could be made more performant by only selecting the fields we need, but for time's sake, we'll just select everything
 export const workoutsQuery = supabase
